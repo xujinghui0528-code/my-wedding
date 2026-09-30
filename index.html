@@ -47,7 +47,7 @@
 <div class="field"><span class="field-label">是否需要德清站接送？</span><div class="choice-row"><label class="choice"><input type="radio" name="shuttle" value="需要"><span>需要</span></label><label class="choice"><input type="radio" name="shuttle" value="不需要"><span>不需要</span></label></div></div>
 <div class="field"><label class="field-label" for="arrival">预计何时到达德清站？</label><input class="text-input" id="arrival" name="arrival" placeholder="例如：11月14日 14:20 左右"></div>
 <div class="field"><label class="field-label" for="note">想对我们说的话／其他备注</label><input class="text-input" id="note" name="note" placeholder="餐食、行程或其他需要我们知道的事"></div>
-<button class="reply-button" type="submit">寄 出 回 信</button><div class="form-message" id="form-message" role="status"></div></form><small>回信将由我们私密保存，仅用于婚礼当天的住宿与接送安排。</small></div></section>
+<button class="reply-button" type="submit">寄 出 回 信</button><div class="form-message" id="form-message" role="status" aria-live="polite"></div></form><small>回信将由我们私密保存，仅用于婚礼当天的住宿与接送安排。</small></div></section>
 <footer>林俊涛 &amp; 徐镜惠<small>WITH LOVE · MOGANSHAN · 2026.11.14</small></footer></main>
 <audio id="wedding-music" src="assets/bgm-wedding.mp3" preload="none" loop></audio>
 <button id="music-toggle" type="button" aria-label="背景音乐播放开关" aria-pressed="false">♫ 播放音乐</button>
@@ -85,36 +85,4 @@ Promise.race([
   Promise.all(openingReady),
   new Promise(resolve => setTimeout(resolve, 1200))
 ]).then(beginWhenVisible);
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqzhp2Niumno2XKmkafaJ-ruoO8n1VgxRIy8NU10gUliBln2Keivk8OL1a5u2mrewlXQ/exec';
-const form = document.getElementById('rsvp-form');
-const message = document.getElementById('form-message');
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  if (!GOOGLE_SCRIPT_URL) {
-    message.className = 'form-message error';
-    message.textContent = '回信收集正在准备中，请稍后再试。';
-    message.style.display = 'block';
-    return;
-  }
-  const data = new FormData(form);
-  const reply = Object.fromEntries(data.entries());
-  reply.stay = data.getAll('stay').join('、') || '未选择';
-  reply.submittedAt = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
-  const submit = form.querySelector('button');
-  submit.disabled = true;
-  submit.textContent = '回信寄送中…';
-  try {
-    await fetch(GOOGLE_SCRIPT_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(reply) });
-    form.reset();
-    message.className = 'form-message';
-    message.textContent = '回信已寄出，正在为你妥帖安排山谷里的相聚。';
-  } catch (error) {
-    message.className = 'form-message error';
-    message.textContent = '暂时没能寄出回信，请稍后再试。';
-  } finally {
-    message.style.display = 'block';
-    submit.disabled = false;
-    submit.textContent = '寄 出 回 信';
-  }
-});
-</script></body></html>
+</script><script src="rsvp.js" defer></script></body></html>
