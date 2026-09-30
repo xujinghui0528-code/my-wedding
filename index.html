@@ -157,7 +157,7 @@ footer small{font-size:15px;letter-spacing:.06em}
 <section class="venue"><div class="venue-grid"><figure class="venue-photo"><img src="assets/wangshan-venue-photo-light.webp" width="1080" height="1620" alt="忘山别墅实景：梧桐树下的圆形平台与黑色铁艺弧形长椅围栏" loading="lazy" decoding="async" fetchpriority="low"><figcaption>树影之间，我们在这里相见 ♡</figcaption></figure><div class="venue-copy"><div class="section-kicker" style="text-align:left">where we gather</div><h3>莫干山枫鹃谷 · 忘山别墅</h3><p>把喧嚣留在山外，在树影与花香之间相聚。愿这一日的温柔，成为我们共同珍藏的回忆。</p><div class="address">浙江省湖州市德清县<br>莫干山风景区内62号别墅<br><span class="venue-landmark">近剑池景区 · 华厅停车场旁</span><a class="venue-source" href="https://hotels.ctrip.com/hotels/4365265.html" target="_blank" rel="noopener noreferrer">查看场地信息 ↗</a></div><div class="tip"><strong>初冬山居提示</strong><br>11月中旬的山间昼夜温差较大，请准备一件米白、浅粉或浅绿色披肩／外套，和晚风温柔相处。</div></div></div></section>
 <section class="attire"><div class="section-kicker">dress in soft colors</div><h2>穿得自在，来相聚</h2><p class="center-copy">不必特意盛装，穿得舒服就很好。<br>柔软针织、日常衬衫，配一点米白、浅粉或淡绿。</p><div class="outfit-scroll" tabindex="0" role="region" aria-label="六套日常穿搭，可左右滑动查看"><div class="outfit-sheet"><img src="assets/guest-six-retro-v3-light.webp" width="3072" height="1024" loading="lazy" decoding="async" fetchpriority="low" alt="六套无五官手绘穿搭，从左至右：浅粉开衫配半裙、燕麦衬衫配休闲裤、淡绿针织配米白裤、米白开衫配粉色连衣裙、豆沙针织配直筒裤、条纹上衣配阔腿裤"><div class="outfit-labels"><span>浅粉开衫 · 半裙</span><span>燕麦衬衫 · 休闲裤</span><span>淡绿针织 · 米白裤</span><span>米白开衫 · 连衣裙</span><span>豆沙针织 · 直筒裤</span><span>条纹上衣 · 阔腿裤</span></div></div></div><p class="outfit-hint">六种日常搭配，选你穿着最自在的一套<span> · 左右滑动看看</span></p></section>
 <section class="stay"><div class="section-kicker">a little note</div><h2>关于住宿与接送</h2><div class="stay-note"><p>11月14日当晚，我们将为大家统一安排住宿。</p><p>如 <strong>不需要14日晚住宿</strong>，请提前告诉我们；<br>若想在 <strong>11月13日晚提前入住</strong>，也请尽早告知，方便我们为你预留山谷里的房间。</p><p>我们会统一安排 <strong>德清站</strong> 接送，<br>期待在抵达的那一刻，就给你一个拥抱。</p></div></section>
-<section class="reply" id="reply"><div class="section-kicker">rsvp</div><h2>请告诉我们你的安排</h2><div class="reply-card"><iframe id="wedding-reply" title="婚礼回信：出席、住宿与接送安排" data-src="https://b6gltoup.jsjform.com/f/a1MDn8?banner=hide&amp;background=transparent" width="100%" height="1250" style="display:block;width:100%;height:1250px;border:0;background:transparent" referrerpolicy="strict-origin-when-cross-origin"></iframe><noscript><iframe title="婚礼回信填写表" src="https://b6gltoup.jsjform.com/f/a1MDn8" width="100%" height="1250" style="border:0"></iframe><style>#wedding-reply{display:none}</style></noscript></div></section>
+<section class="reply" id="reply"><div class="section-kicker">rsvp</div><h2>请告诉我们你的安排</h2><div class="reply-card"><iframe id="wedding-reply" title="婚礼回信：出席、住宿与接送安排" data-src="https://jinshuju.net/f/a1MDn8?banner=hide&amp;background=transparent&amp;embedded=true" width="100%" height="1250" style="display:block;width:100%;height:1250px;border:0;background:transparent" referrerpolicy="strict-origin-when-cross-origin"></iframe><noscript><iframe title="婚礼回信填写表" src="https://b6gltoup.jsjform.com/f/a1MDn8" width="100%" height="1250" style="border:0"></iframe><style>#wedding-reply{display:none}</style></noscript></div></section>
 <footer>林俊涛 &amp; 徐镜惠<small>WITH LOVE · MOGANSHAN · 2026.11.14</small></footer></main>
 <audio id="wedding-music" src="assets/bgm-wedding.mp3" preload="none" loop></audio>
 <button id="music-toggle" type="button" aria-label="背景音乐播放开关" aria-pressed="false">♫ 播放音乐</button>
@@ -206,6 +206,18 @@ requestAnimationFrame(() => requestAnimationFrame(prepareEntrance));
 </script><script>
 (() => {
   const frame = document.getElementById('wedding-reply');
+  // Official embedded form sends heightChanged after layout and validation changes.
+  const formOrigins = new Set(['https://jinshuju.net', 'https://jsj.top', 'https://b6gltoup.jsjform.com']);
+  window.addEventListener('message', event => {
+    if (event.source !== frame.contentWindow || !formOrigins.has(event.origin)) return;
+    const data = event.data;
+    if (!data || data.event !== 'heightChanged') return;
+    const height = Number(data.value);
+    if (!Number.isFinite(height) || height < 1 || height > 50000) return;
+    frame.style.height = Math.ceil(height + 24) + 'px';
+    frame.setAttribute('height', String(Math.ceil(height + 24)));
+    frame.setAttribute('scrolling', 'no');
+  });
   const load = () => { if (!frame.hasAttribute('src')) frame.src = frame.dataset.src; };
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => {
